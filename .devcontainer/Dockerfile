@@ -10,9 +10,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
 # will be updated to match your local UID/GID (when using the dockerFile property).
 # See https://aka.ms/vscode-remote/containers/non-root-user for details.
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+# ARG USERNAME=vscode
+# ARG USER_UID=1000
+# ARG USER_GID=$USER_UID
 
 # Configure apt and install packages
 # hadolint ignore=DL3008
@@ -25,8 +25,8 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends git iproute2 procps iproute2 lsb-release ca-certificates \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
-    && groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    # && groupadd --gid $USER_GID $USERNAME \
+    # && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     # [Optional] Add sudo support for the non-root user
     # && apt-get install -y sudo \
     # && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
@@ -40,9 +40,10 @@ RUN apt-get update \
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
-USER vscode
-ENV HOME /home/vscode
+# USER vscode
+# ENV HOME /home/vscode
 
-RUN cd /home/vscode \
-    && mix local.hex --force \
+# RUN cd /home/vscode \
+#    && 
+RUN mix local.hex --force \
     && mix local.rebar --force
