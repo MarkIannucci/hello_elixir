@@ -1,0 +1,71 @@
+name: Fly build and deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
+  FLY_BASE_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
+  FLY_PRIMARY_REGION: ${{ vars.FLY_PRIMARY_REGION || secrets.FLY_PRIMARY_REGION }}
+  FLY_SECONDARY_REGION: ${{ vars.FLY_SECONDARY_REGION || secrets.FLY_SECONDARY_REGION }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-devcontainer:
+    name: build-devcontainer
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: markiannucci/flyctl-actions/setup-flyctl@main
+          
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Dev Container task
+        uses: devcontainers/ci@v0.2
+        with:
+          imageName: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+          cacheFrom: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+          push: always
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: build-devcontainer
+    container:
+      image: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+      - id: deploy
+        run: |
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }} 
+          fi
+          echo "fly.toml:"
+          envsubst < fly.template.toml | tee fly.toml      
+          mix local.hex --force
+          mix local.rebar --force
+          mix deps.get
+          SECRET_KEY_BASE=$(mix phx.gen.secret | tail -n 1)
+          export SECRET_KEY_BASE
+          flyctl apps create $FLY_APP_NAME
+          flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
+          flyctl postgres create -n "$FLY_APP_NAME-db" --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
+          flyctl postgres attach $FLY_APP_NAME-db
+          flyctl deploy

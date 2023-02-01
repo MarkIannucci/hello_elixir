@@ -20,7 +20,7 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     #
      # Install bash tree
-    && apt-get -y install --no-install-recommends tree \
+    && apt-get -y install --no-install-recommends tree gettext \
     # Install git iproute2, procps, lsb-release (useful for CLI installs)
     && apt-get -y install --no-install-recommends git iproute2 procps iproute2 lsb-release ca-certificates \
     #
@@ -40,5 +40,15 @@ RUN apt-get update \
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
-USER vscode
-ENV HOME /home/vscode
+# use this if you want to default the user to vscode.  That's unnecessary 
+# when using remoteUser in the devcontainer.json file.
+# USER vscode
+# ENV HOME /home/vscode
+
+# Install hex and rebar for both the GH user and the vscode users
+RUN mix local.hex --force \
+    && mix local.rebar --force 
+
+RUN mkdir /home/vscode/.mix \
+    && cp -R /root/.mix/* /home/vscode/.mix \
+    && chmod -R ugo=rwx /home/vscode/.mix
