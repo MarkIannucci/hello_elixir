@@ -40,11 +40,15 @@ RUN apt-get update \
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
+# use this if you want to default the user to vscode.  That's unnecessary 
+# when using remoteUser in the devcontainer.json file.
 # USER vscode
 # ENV HOME /home/vscode
 
-# RUN cd ~ \
-#     && 
+# Install hex and rebar for both the GH user and the vscode users
 RUN mkdir /home/github \
+    && mix local.hex --force \
+    && mix local.rebar --force \
+    && cd /home/vscode \
     && mix local.hex --force \
     && mix local.rebar --force

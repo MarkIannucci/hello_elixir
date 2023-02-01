@@ -40,22 +40,6 @@ jobs:
           imageName: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
           cacheFrom: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
           push: always
-          # can't pass secrets --- see this issue https://github.com/devcontainers/ci/issues/40
-          # # Change this to be your CI task/script
-          # runCmd: |
-            # if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-            #   echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" 
-            # fi
-            # echo "fly.toml:"
-            # envsubst < fly.template.toml | tee fly.toml      
-            # mix deps.get
-            # SECRET_KEY_BASE=$(mix phx.gen.secret)
-            # export SECRET_KEY_BASE
-            # flyctl apps create $FLY_APP_NAME
-            # flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
-            # flyctl postgres create -n $($FLY_APP_NAME)-db --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
-            # flyctl postgres attach --postgres-app $($FLY_APP_NAME)-db
-            # flyctl deploy
 
   deploy:
     name: deploy
