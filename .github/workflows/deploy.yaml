@@ -32,23 +32,24 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and run Dev Container task
+      - name: Build Dev Container task
         uses: devcontainers/ci@v0.2
         with:
           # Change this to point to your image name
           imageName: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
-          # Change this to be your CI task/script
-          runCmd: |
-            if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-              echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" 
-            fi
-            echo "fly.toml:"
-            envsubst < fly.template.toml | tee fly.toml      
-            mix deps.get
-            SECRET_KEY_BASE=$(mix phx.gen.secret)
-            export SECRET_KEY_BASE
-            flyctl apps create $FLY_APP_NAME
-            flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
-            flyctl postgres create -n $($FLY_APP_NAME)-db --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
-            flyctl postgres attach --postgres-app $($FLY_APP_NAME)-db
-            flyctl deploy
+          # can't pass secrets --- see this issue https://github.com/devcontainers/ci/issues/40
+          # # Change this to be your CI task/script
+          # runCmd: |
+          #   if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+          #     echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" 
+          #   fi
+          #   echo "fly.toml:"
+          #   envsubst < fly.template.toml | tee fly.toml      
+          #   mix deps.get
+          #   SECRET_KEY_BASE=$(mix phx.gen.secret)
+          #   export SECRET_KEY_BASE
+          #   flyctl apps create $FLY_APP_NAME
+          #   flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
+          #   flyctl postgres create -n $($FLY_APP_NAME)-db --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
+          #   flyctl postgres attach --postgres-app $($FLY_APP_NAME)-db
+          #   flyctl deploy
