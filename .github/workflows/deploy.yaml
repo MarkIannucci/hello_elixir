@@ -21,6 +21,8 @@ jobs:
   build-devcontainer:
     name: build-devcontainer
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v3
       - uses: markiannucci/flyctl-actions/setup-flyctl@main
