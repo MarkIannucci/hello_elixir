@@ -1,6 +1,6 @@
 # fly.toml file generated for fly-elixir on 2021-11-03T10:49:02-06:00
 
-app = "fly-elixir-me"
+app = "${FLY_APP_NAME}"
 
 kill_signal = "SIGTERM"
 kill_timeout = 5
