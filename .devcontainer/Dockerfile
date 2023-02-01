@@ -44,5 +44,5 @@ USER vscode
 ENV HOME /home/vscode
 
 RUN cd /home/vscode \
-    && mix local.hex \
-    && mix local.rebar
+    && mix local.hex --force \
+    && mix local.rebar --force
