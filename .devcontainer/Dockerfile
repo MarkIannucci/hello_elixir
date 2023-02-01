@@ -43,6 +43,7 @@ ENV DEBIAN_FRONTEND=dialog
 # USER vscode
 # ENV HOME /home/vscode
 
-RUN cd ~ \
-    && mix local.hex --force \
+# RUN cd ~ \
+#     && 
+RUN mix local.hex --force \
     && mix local.rebar --force
