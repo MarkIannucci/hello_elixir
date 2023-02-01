@@ -1,0 +1,45 @@
+name: Fly build and deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
+  FLY_BASE_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
+  FLY_PRIMARY_REGION: ${{ vars.FLY_PRIMARY_REGION || secrets.FLY_PRIMARY_REGION }}
+  FLY_SECONDARY_REGION: ${{ vars.FLY_SECONDARY_REGION || secrets.FLY_SECONDARY_REGION }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: markiannucci/flyctl-actions/setup-flyctl@main
+
+      - id: update-app-name-for-prs
+        if: github.event_name == 'pull_request'
+        run: 
+          echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - id: variable-substition
+        run : |
+          echo "fly.toml:"
+          envsubst < fly.template.toml | tee fly.toml
+
+      - id: readme-instructions
+        run: | 
+          SECRET_KEY_BASE=$(mix phx.gen.secret)
+          flyctl apps create $FLY_APP_NAME
+          flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
+          flyctl postgres create -n fly-elixir-me-db --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
+          flyctl postgres attach --postgres-app fly-elixir-me-db
+          flyctl deploy
