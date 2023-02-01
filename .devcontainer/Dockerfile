@@ -46,9 +46,11 @@ ENV DEBIAN_FRONTEND=dialog
 # ENV HOME /home/vscode
 
 # Install hex and rebar for both the GH user and the vscode users
+RUN mix local.hex --force \
+    && mix local.rebar --force 
+
 RUN mkdir /home/github \
-    && mix local.hex --force \
-    && mix local.rebar --force \
-    && cd /home/vscode \
-    && mix local.hex --force \
-    && mix local.rebar --force
+    && cp -R /root/.mix/* /home/github/.mix \
+    && chmod -R ugo=rwx /home/github/.mix \
+    && cp -R /root/.mix/* /home/vscode/.mix \
+    && chmod -R ugo=rwx /home/vscode/.mix
