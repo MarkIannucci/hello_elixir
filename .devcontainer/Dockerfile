@@ -37,8 +37,12 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Add Hex
+RUN mix local.hex --force
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
 USER vscode
 ENV HOME /home/vscode
+
