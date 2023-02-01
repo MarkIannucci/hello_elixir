@@ -64,7 +64,7 @@ jobs:
     container:
       image: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
       volumes:
-        - ${{ github.workspace }}:${{ github.workspace }}
+        - /data
     defaults:
       run:
         shell: bash
@@ -72,6 +72,8 @@ jobs:
       - uses: actions/checkout@v3
       - id: deploy
         run: |
+          git clone https://github.com/markiannucci/headscale-on-fly-io
+          gh pr checkout ${{ github.event.number }}
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }} 
           fi
@@ -85,3 +87,4 @@ jobs:
           flyctl postgres create -n $($FLY_APP_NAME)-db --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
           flyctl postgres attach --postgres-app $($FLY_APP_NAME)-db
           flyctl deploy
+        working-directory: /data
