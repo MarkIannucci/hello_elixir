@@ -63,6 +63,8 @@ jobs:
     needs: build-devcontainer
     container:
       image: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+    defaults:
+      shell: bash
     steps:
       - id: deploy
         run: |
