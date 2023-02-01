@@ -1,0 +1,33 @@
+{
+	"name": "Elixir",
+	"build":{
+	  "dockerfile": "Dockerfile",
+	  "context": ".."
+	},
+  
+	"settings": {
+	  "terminal.integrated.defaultProfile.linux": "bash"
+	},
+  
+	"appPort": [],
+  
+	"postCreateCommand": "",
+  
+	"remoteUser": "vscode",
+	"customizations": {
+		"vscode": {
+			"extensions": ["github.vscode-pull-request-github",
+			"jakebecker.elixir-ls"]
+		}
+	},
+  
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:latest": {
+			"installDirectlyFromGitHubRelease": false
+		},
+		"ghcr.io/dhoeric/features/flyctl:1": {
+        	"version": "latest"
+    	}
+	}
+  }
+  
