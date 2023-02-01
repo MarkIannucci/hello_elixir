@@ -17,7 +17,9 @@
 	"customizations": {
 		"vscode": {
 			"extensions": ["github.vscode-pull-request-github",
-			"jakebecker.elixir-ls"]
+			"jakebecker.elixir-ls",
+			"cschleiden.vscode-github-actions"
+			]
 		}
 	},
   
