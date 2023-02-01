@@ -43,6 +43,7 @@ jobs:
 
       - id: readme-instructions
         run: | 
+          mix deps.get
           SECRET_KEY_BASE=$(mix phx.gen.secret)
           flyctl apps create $FLY_APP_NAME
           flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
