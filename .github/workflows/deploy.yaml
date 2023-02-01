@@ -35,6 +35,12 @@ jobs:
           echo "fly.toml:"
           envsubst < fly.template.toml | tee fly.toml
 
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '25.2.2'
+          elixir-version: '1.14.3'
+          rebar3-version: '3.20.0'
+
       - id: readme-instructions
         run: | 
           SECRET_KEY_BASE=$(mix phx.gen.secret)
