@@ -64,7 +64,7 @@ jobs:
     container:
       image: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
       volumes:
-        - ${{ github.workspace }}:/${{ github.workspace }}
+        - ${{ github.workspace }}:${{ github.workspace }}
     defaults:
       run:
         shell: bash
