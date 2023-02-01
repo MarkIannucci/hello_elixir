@@ -67,10 +67,11 @@ jobs:
       run:
         shell: bash
     steps:
+      - uses: actions/checkout@v3
       - id: deploy
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-            echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" 
+            FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }} 
           fi
           echo "fly.toml:"
           envsubst < fly.template.toml | tee fly.toml      
