@@ -35,8 +35,9 @@ jobs:
       - name: Build Dev Container task
         uses: devcontainers/ci@v0.2
         with:
-          # Change this to point to your image name
           imageName: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+          cacheFrom: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+          push: always
           # can't pass secrets --- see this issue https://github.com/devcontainers/ci/issues/40
           # # Change this to be your CI task/script
           # runCmd: |
