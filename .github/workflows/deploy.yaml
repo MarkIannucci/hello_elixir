@@ -63,6 +63,8 @@ jobs:
     needs: build-devcontainer
     container:
       image: ghcr.io/markiannucci/headscale-on-fly-io-devcontainer
+      volumes:
+        - $GITHUB_WORKSPACE:/$GITHUB_WORKSPACE
     defaults:
       run:
         shell: bash
