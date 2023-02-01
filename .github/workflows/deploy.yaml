@@ -59,7 +59,8 @@ jobs:
           fi
           echo "fly.toml:"
           envsubst < fly.template.toml | tee fly.toml      
-          ls /github/home -a
+          mix local.hex --force
+          mix local.rebar --force
           mix deps.get
           SECRET_KEY_BASE=$(mix phx.gen.secret)
           export SECRET_KEY_BASE
