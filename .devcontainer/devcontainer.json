@@ -16,13 +16,18 @@
 	"remoteUser": "vscode",
 	"customizations": {
 		"vscode": {
-			"extensions": []
+			"extensions": ["github.vscode-pull-request-github",
+			"jakebecker.elixir-ls"]
 		}
 	},
   
-	"extensions": [
-	  "github.vscode-pull-request-github",
-	  "jakebecker.elixir-ls"
-	]
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:latest": {
+			"installDirectlyFromGitHubRelease": false
+		},
+		"ghcr.io/dhoeric/features/flyctl:1": {
+        	"version": "latest"
+    	}
+	}
   }
   
