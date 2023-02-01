@@ -50,7 +50,7 @@ RUN mix local.hex --force \
     && mix local.rebar --force 
 
 RUN mkdir /github/home \
-    && mkdir /github/home.mix \
+    && mkdir /github/home/.mix \
     && cp -R /root/.mix/* /home/github/.mix \
     && chmod -R ugo=rwx /home/github/.mix \
     && mkdir /home/vscode/.mix \
