@@ -49,7 +49,8 @@ ENV DEBIAN_FRONTEND=dialog
 RUN mix local.hex --force \
     && mix local.rebar --force 
 
-RUN mkdir /github/home \
+RUN mkdir /github \
+    && mkdir /github/home \
     && mkdir /github/home/.mix \
     && cp -R /root/.mix/* /home/github/.mix \
     && chmod -R ugo=rwx /home/github/.mix \
