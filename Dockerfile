@@ -71,15 +71,17 @@ RUN mix release
 # add tailscale to the elixir thingy
 FROM alpine:latest as tailscale
 WORKDIR /app
-ENV VERSION=(curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq ".name" --raw-output) TSFILE=tailscale_${VERSION}_amd64.tgz
-RUN wget https://pkgs.tailscale.com/stable/${TSFILE} && \
-  tar xzf ${TSFILE} --strip-components=1
+RUN apk add curl jq
+RUN VERSION=$(curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq ".name" --raw-output) \
+  && TSFILE="tailscale_${VERSION}_amd64.tgz" \
+  && wget https://pkgs.tailscale.com/stable/${TSFILE} \
+  && tar xzf ${TSFILE} --strip-components=1
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates iptables ip6tables \
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates iptables \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
