@@ -56,6 +56,11 @@ jobs:
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }} 
+          else 
+            if [[ $(flyctl status -a $FLY_APP_NAME --json | jq ".Status") == '"running"' ]]; then 
+              flyctl apps destroy $FLY_APP_NAME --yes
+              flyctl apps destroy $FLY_APP_NAME-db --yes
+            fi
           fi
           echo "fly.toml:"
           envsubst < fly.template.toml | tee fly.toml      
