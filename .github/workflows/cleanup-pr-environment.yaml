@@ -23,6 +23,6 @@ jobs:
           echo "FLY_APP_NAME=${FLY_APP_NAME}-${{ github.event.number }}" >> $GITHUB_ENV
       
       - id: destroy-app
-        run:
+        run: |
           flyctl apps destroy ${FLY_APP_NAME} --yes
           flyctl apps destroy ${FLY_APP_NAME}-db --yes
