@@ -10,8 +10,8 @@ env:
   FLY_APP_NAME: ${{ vars.FLY_APP_NAME || secrets.FLY_APP_NAME }}
 
 jobs:
-  deploy:
-    name: Deploy app
+  cleanup-pr-environment:
+    name: Cleanup PR Environment
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
