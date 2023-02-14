@@ -69,8 +69,8 @@ jobs:
           mix deps.get
           SECRET_KEY_BASE=$(mix phx.gen.secret | tail -n 1)
           export SECRET_KEY_BASE
-          flyctl apps create $FLY_APP_NAME
+          flyctl apps create $FLY_APP_NAME --org personal
           flyctl secrets set SECRET_KEY_BASE=$SECRET_KEY_BASE
-          flyctl postgres create -n "$FLY_APP_NAME-db" --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2
+          flyctl postgres create -n "$FLY_APP_NAME-db" --volume-size 1 --vm-size shared-cpu-1x --region den --initial-cluster-size 2 --org personal
           flyctl postgres attach $FLY_APP_NAME-db
           flyctl deploy
